@@ -1,0 +1,9 @@
+{
+    "dev": {
+        "app_function": "app.app", 
+        "aws_region": "us-west-2", 
+        "profile_name": "personal", 
+      "s3_bucket": "lambda-tutorial-01",
+      "runtime": "python2.7"
+    }
+}

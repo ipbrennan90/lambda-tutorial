@@ -74,3 +74,47 @@ flask run
 
 ```
 and check out your localhost at port 5000 and you should be welcomed by a little "Hello World!"
+
+
+If you haven't already you'll need to configure your awscli by following these [amazon docs](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
+
+
+## Deployment with Zappa
+
+```
+zappa init
+```
+
+this will create your zappa_settings.json file and add it to the project, now you can deploy!
+
+this is what makes zappa so nice, it takes this tiny config and then packages and deploys with one command
+
+you can check out more advanced settings to add into your project here: [advanced zappa settings](https://github.com/Miserlou/Zappa#advanced-settings)
+
+```
+zappa deploy
+```
+
+if you have any trouble with deploy on this one, such as seeing:
+
+```
+{
+    message: 'internal server error'
+}
+```
+when you try to view your site, check cloudwatch, if your logs have something like:
+
+```
+Unable to import module 'handler': No module named builtins
+```
+there is most likely a difference between your local python version and pipenv's version
+so double check that and re-deploy, using different versions on pipenv is as as easy as:
+
+```
+pipenv --two
+```
+and re-installing your dependencies on the new venv
+
+
+
+this branch and my endeavours with zappa have been greatly aided by this [blog post](https://andrich.blog/2017/02/12/first-steps-with-aws-lambda-zappa-flask-and-python/) by [Oliver Andrich](https://andrich.blog)
