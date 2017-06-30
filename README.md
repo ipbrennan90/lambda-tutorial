@@ -1,2 +1,10 @@
-# lambda-tutorial
-Small tutorial on how to set up a lambda function to handle basic form post requests and persist to an RDS instance. CORS included.
+# Hello-World with Zappa
+
+## Install Python
+
+If you don't already have it you'll need to install python, I recommend using homebrew
+
+``` bash
+brew update
+brew install python 3
+```
