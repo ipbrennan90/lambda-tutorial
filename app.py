@@ -1,9 +1,36 @@
+import os
+import logging
 from flask import Flask, Response, json, request
- 
+from dotenv import Dotenv
+import pymysql
+# Of course, replace by your correct path
+dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+os.environ.update(dotenv)
+
 app = Flask(__name__)
- 
+RDS_HOST = os.environ.get("DB_HOST")
+RDS_PORT = int(os.environ.get("DB_PORT", 3306))
+NAME = os.environ.get("DB_USERNAME")
+PASSWORD = os.environ.get("DB_PASSWORD")
+DB_NAME = os.environ.get("DB_NAME")
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+
+
+def connect():
+    try:
+        cursor = pymysql.cursors.DictCursor
+        conn = pymysql.connect(RDS_HOST, user=NAME, passwd=PASSWORD, db=DB_NAME, port=RDS_PORT, cursorclass=cursor, connect_timeout=5)
+        logger.info("SUCCESS: connection to RDS successful")
+        return(conn)
+    except Exception as e:
+        logger.exception("Database Connection Error")
+        
 @app.route('/')
 def index():
+    connect()
     return "Hello World!", 200
  
 @app.route('/user', methods=["GET", "POST"])
