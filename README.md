@@ -138,7 +138,7 @@ Press save and test, the output is generally useless here but it shouldn't throw
 any weird errors. Now deploy the app:
 
 ```bash
-zappa deploy
+zappa update
 ```
 
 and tail
