@@ -150,4 +150,48 @@ zappa tail
 you should see your log for a successful connection to the RDS instance, if not
 you may want to go back over the amazon steps, or open an issue on this branch.
 
+## Building the user table
+
+For the purposes of this tutorial I'm going to just build a get endpoint that
+will do the work for us, since the lambda already lives on the same vpc as the
+rds instance we created it's easy to make that connection here, for future, and
+more reliable projects, I recommend creating a vpc that can handle an ssh
+connection from ec2. These tutorials will get you there [vpc aws tutorial](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Tutorials.WebServerDB.CreateVPC.html)
+[ec2 ssh tutorial](https://99robots.com/how-to-ssh-to-ec2-instance-on-aws/)
+for now we will just be making the table via the lambda for simplicity
+
+let's add a build_db function:
+
+```python
+def build_db():
+    conn = connect()
+    query = "create table User (ID int NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255), PRIMARY KEY (ID))"
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            conn.commit()
+    except Exception as e:
+        logger.exception("could not build table")
+    finally:
+        cur.close()
+        conn.close()
+        response = Response(json.dumps({"message": "succes"}), 200)
+        return response
+```
+
+and the endpoint we'll use to hit it:
+
+```
+@app.route('/build', methods=["GET"])
+def build():
+    build_db()
+
+```
+
+and now if you navigate to the build endpoint you should see a success message,
+you will only be able to use this once since once the table is created it cannot
+be made again. Once you get a success message, delete this endpoint and move on
+to the next section of the tutorial to learn how to persist user data and get
+users out of our rds instance.
+
 For this section of the tutorial I had a lot of help from [this](http://docs.aws.amazon.com/lambda/latest/dg/vpc-rds.html) aws tutorial
