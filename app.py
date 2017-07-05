@@ -18,7 +18,22 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-
+def build_db():
+    conn = connect()
+    query = "create table User (ID int NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255), PRIMARY KEY (ID))"
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            conn.commit()
+    except Exception as e:
+        logger.exception("could not build table")
+    finally:
+        cur.close()
+        conn.close()
+        response = Response(json.dumps({"message": "succes"}), 200)
+        return response
+        
+    
 def connect():
     try:
         cursor = pymysql.cursors.DictCursor
@@ -30,8 +45,11 @@ def connect():
         
 @app.route('/')
 def index():
-    connect()
     return "Hello World!", 200
+
+@app.route('/build', methods=["GET"])
+def build():
+    build_db()
  
 @app.route('/user', methods=["GET", "POST"])
 def user():
