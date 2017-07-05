@@ -160,7 +160,11 @@ connection from ec2. These tutorials will get you there [vpc aws tutorial](http:
 [ec2 ssh tutorial](https://99robots.com/how-to-ssh-to-ec2-instance-on-aws/)
 for now we will just be making the table via the lambda for simplicity
 
-let's add a build_db function:
+
+first remove the connect function call from the index endpoint, we know longer
+need to make that connection
+
+next let's add a build_db function:
 
 ```python
 def build_db():
