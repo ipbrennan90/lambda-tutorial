@@ -1,6 +1,6 @@
 # Routing requests to the Database
 
-## Posting to the dagtabase with form data
+## Posting to the database with form data
 
 first lets break out our response building into a function
 
@@ -15,6 +15,7 @@ user function
 
 ```python
 def user():
+    conn = connect()
     if request.method == "GET":
         # respond to get, coming soon
     if request.method == "POST":
@@ -75,9 +76,14 @@ def insert(data):
     return (query, (uniq_id, data["first_name"], data["last_name"], data["email"]))
 
 ```
+update your function,
 
-now we should be able to post to our lambda function user endpoint and get a
-success callback.
+```bash
+zappa update
+
+```
+now we should be able to post to our lambda function user endpoint, I used postman
+to do so but anything works, and we should see a success callback.
 
 ## Get request for users in RDS
 
@@ -106,7 +112,14 @@ def user():
         return response
 ```
 
-now I recommend getting a json prettifier extension like this one: [json-viewer](https://github.com/tulios/json-viewer)
+then, as always:
+
+```bash
+zappa update
+
+```
+
+now I recommend getting a json prettifier extension like [json-viewer](https://github.com/tulios/json-viewer)
 to see an easily digestable repersentation of your database within your browser.
 Once you have an extension enabled visit your user endpoint in your browser and
 you should be seeing your user table in json form like so:
