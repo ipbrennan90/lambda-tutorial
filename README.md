@@ -1,39 +1,36 @@
-# Adding cors handling to your Lambda function
+# Lambda Tutorial
 
-This is one of the shortest branches but cors is what gave me the
-most trouble, and is ultimately necessary if you ever want to hit
-your function from a client side app.
+I built this tutorial on lambda because of my original struggles getting lambda set up and working. this covers:
 
-I tried using aws's automated cors setup, I tried wrapping the app
-with the flask cors package. All of these presented their fair share
-of headaches and since zappa sets your function up as a proxy it's a lot
-more simple to just handroll your CORs headers and Options preflight request
-handling.
+* set up with zappa
+* vpc to connect to a mysql RDS instance on amazon
+* RDS persistence and querying through the lambda function
+* CORs setup
+* simple security
 
-## CORs headers
+The tutorial should be done by checking out these branches and going through the readmes in this order
 
-All I had to do to add cors headers is add two lines to my build_response function:
+* hello-world
+* routing
+* rds-integration
+* database-requests
+
+If you just want to run the app, adjust your .env to have the values for the
+config vars in .env.example and run:
+
+```bash
+pipenv install
 
 ```
-def build_response(resp_dict, status_code):
-    response = Response(json.dumps(resp_dict), status_code)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    return response
-```
-## Handling preflight, or options requests.
 
-When a Cross Origin Request comes in from an application it will first hit
-your function with an Options request to do a pre-flight check and make sure
-there's nothing malicious going on, we'll need to handle that by adding
-a few things to our user function:
+then,
 
-```python
-def user():
-    if request.method == "OPTIONS":
-        return build_response({"status": "success"}, 200)
 ```
-and that's it, your app should be good to go as far as CORs are concerned. I would
-recommend only allowing requests from certain sites though instead of allowing
-any origin to make a request to your function, that's going to be covered in [this](https://github.com/ipbrennan90/lambda-tutorial/tree/simple-security)
-branch.
+zappa deploy
+```
+
+if you get stuck here I'd recommend at least running through the readme in the [rds-integration](https://github.com/ipbrennan90/lambda-tutorial/tree/rds-integration) branch
+
+
+
+I have done my best to keep this simple and short, please open any issues if you have trouble with an explanation or get stuck on a step and I will work hard to solve those.
