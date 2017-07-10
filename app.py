@@ -49,13 +49,19 @@ def insert(data):
 
 def build_response(resp_dict, status_code):
     response = Response(json.dumps(resp_dict), status_code)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
         
 @app.route('/')
 def index():
+    return build_response({"message": "Welcome to my lambda app!"}, 200)
 
 @app.route('/user', methods=["GET", "POST"])
 def user():
+    if request.method == "OPTIONS":
+        return build_response({"status": "success"}, 200)
+    
     conn = connect()
     if request.method == "GET":
         items = []
