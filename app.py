@@ -40,14 +40,6 @@ def validate(data):
             error_fields.append(x)
     return (len(error_fields) == 0, error_fields)
 
-def build_db():
-    conn = connect()
-    with conn.cursor() as cur:
-        cur.execute("drop table if exists User")
-        cur.execute("create table User ( ID varchar(255) NOT NULL, FirstName varchar(255) NOT NULL, LastName varchar(255) NOT NULL, Email varchar(255) NOT NULL, PRIMARY KEY (ID))")
-        conn.commit()
-    return build_response({"message": "success"}, 200)
-
 def insert(data):
     uniq_id = str(uuid5(uuid1(), str(uuid1())))
     query = """insert into User (ID, FirstName, LastName, Email)
@@ -57,18 +49,19 @@ def insert(data):
 
 def build_response(resp_dict, status_code):
     response = Response(json.dumps(resp_dict), status_code)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
         
 @app.route('/')
 def index():
     return build_response({"message": "Welcome to my lambda app!"}, 200)
 
-@app.route('/build')
-def build():
-    return build_db()
-
 @app.route('/user', methods=["GET", "POST"])
 def user():
+    if request.method == "OPTIONS":
+        return build_response({"status": "success"}, 200)
+    
     conn = connect()
     if request.method == "GET":
         items = []
