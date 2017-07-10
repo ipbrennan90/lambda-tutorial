@@ -20,18 +20,23 @@ logger.setLevel(logging.INFO)
 
 def build_db():
     conn = connect()
-    query = "create table User (ID int NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255), PRIMARY KEY (ID))"
+    query = "create table User (ID varchar(255) NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255) NOT NULL, PRIMARY KEY (ID))"
     try:
         with conn.cursor() as cur:
+            cur.execute("drop table if exists User")
             cur.execute(query)
             conn.commit()
     except Exception as e:
-        logger.exception("could not build table")
+        logger.exception(e)
+        response = Response(json.dumps({"status": "error", "message": "could not build table"}), 500)
+        return response
     finally:
+        logger.info("closing connection")
         cur.close()
         conn.close()
-        response = Response(json.dumps({"message": "succes"}), 200)
-        return response
+    logger.info("responding")
+    response = Response(json.dumps({"status": "success"}), 200)
+    return response
         
     
 def connect():
@@ -49,7 +54,7 @@ def index():
 
 @app.route('/build', methods=["GET"])
 def build():
-    build_db()
+    return build_db()
  
 @app.route('/user', methods=["GET", "POST"])
 def user():

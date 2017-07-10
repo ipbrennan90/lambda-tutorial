@@ -169,18 +169,21 @@ next let's add a build_db function:
 ```python
 def build_db():
     conn = connect()
-    query = "create table User (ID int NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255), PRIMARY KEY (ID))"
+    query = "create table User (ID varchar(255) NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255) NOT NULL, PRIMARY KEY (ID))"
     try:
         with conn.cursor() as cur:
+            # just in case it doesn't work the first time let's drop the table if it exists
+            cur.execute("drop table if exists User")
             cur.execute(query)
             conn.commit()
     except Exception as e:
-        logger.exception("could not build table")
+        logger.exception(e)
+        response = Respone(json.dumps({"status": "error", "message": "could not build table"}), 500)
     finally:
         cur.close()
         conn.close()
-        response = Response(json.dumps({"message": "succes"}), 200)
-        return response
+    response = Response(json.dumps({"status": "success"}), 200)
+    return response
 ```
 
 and the endpoint we'll use to hit it:
@@ -188,14 +191,12 @@ and the endpoint we'll use to hit it:
 ```
 @app.route('/build', methods=["GET"])
 def build():
-    build_db()
+    return build_db()
 
 ```
 
-and now if you navigate to the build endpoint you should see a success message,
-you will only be able to use this once since once the table is created it cannot
-be made again. Once you get a success message, delete this endpoint and move on
-to the next section of the tutorial to learn how to persist user data and get
-users out of our rds instance.
+and now if you navigate to the build endpoint you should see a success message.
+Once you get a success message, delete this endpoint and move on to
+the database-requests branch
 
 For this section of the tutorial I had a lot of help from [this](http://docs.aws.amazon.com/lambda/latest/dg/vpc-rds.html) aws tutorial
