@@ -53,6 +53,7 @@ def build_response(resp_dict, status_code):
         
 @app.route('/')
 def index():
+    return build_response({"status":"success"}, 200)
 
 @app.route('/user', methods=["GET", "POST"])
 def user():
@@ -71,8 +72,7 @@ def user():
             return response
         finally:
             conn.close()
-        response = build_response({"rows": items, "status": "success"}, 200)
-        return response
+        return build_response({"rows": items, "status": "success"}, 200)
     if request.method == "POST":
         data = {
             "first_name": request.form.get("first_name", ""),

@@ -1,2 +1,3 @@
+.dev.env
 .env
 zappa_settings.json
