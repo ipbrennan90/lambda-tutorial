@@ -99,7 +99,7 @@ if you have any trouble with deploy on this one, such as seeing:
 
 ```json
 {
-    message: 'internal server error'
+    "message": "internal server error"
 }
 ```
 when you try to view your site, check cloudwatch, if your logs have something like:
