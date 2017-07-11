@@ -20,7 +20,7 @@ logger.setLevel(logging.INFO)
 
 def build_db():
     conn = connect()
-    query = "create table User (ID varchar(255) NOT NULL, firstName varchar(255) NOT NULL, lastName varchar(255) NOT NULL, email varchar(255) NOT NULL, PRIMARY KEY (ID))"
+    query = "create table User (ID varchar(255) NOT NULL, FirstName varchar(255) NOT NULL, LastName varchar(255) NOT NULL, Email varchar(255) NOT NULL, PRIMARY KEY (ID))"
     try:
         with conn.cursor() as cur:
             cur.execute("drop table if exists User")
