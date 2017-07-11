@@ -11,13 +11,13 @@ familiar with zappa deployment and setting up a basic flask app
 ## Get
 first we need to add Response and json to our flask import:
 
-```
+```python
 from flask import Flask, Response, json'
 ```
 
 adding a get route is pretty straightforward with flask, let's add one for
 getting a fake user:
-```
+```python
 @app.route('/user', methods=["GET"])
 def user():
     resp_dict = {"first_name": "John", "last_name": "doe"}
@@ -35,7 +35,7 @@ flask run
 
 navigate to http://localhost:5000/get-user you should see:
 
-```
+```json
 {
     "first_name": "John",
     "last_name": "Doe"
@@ -52,13 +52,13 @@ zappa update
 
 we'll need request from flask for this so add it to the import:
 
-```
+```python
 from flask import Flask, Response, json, request
 ```
 
 add the post method to your methods list and adjust your route function:
 
-```
+```python
 @app.route('/user', methods=["GET", "POST"])
 def user():
     resp_dict = {}
