@@ -11,13 +11,13 @@ brew install python 3
 
 Always good to upgrade your essential packages
 
-```
+```bash
 pip install --upgrade pip setuptools pipenv
 ```
 
 We'll be using a Pipfile to manage dependencies, instantiate the pipfile and venv like this:
 
-```
+```bash
 pipenv --three
 pipenv shell
 ```
@@ -26,13 +26,13 @@ Should have a working virtual environment and pip file now.
 
 Next, install zappa and flask, flask is a lightweight framework for python applications
 
-```
+```bash
 pipenv install zappa flask
 ```
 
 if you do not have the awscli installed:
 
-```
+```bash
 pipenv install --dev awscli
 ```
 
@@ -40,7 +40,7 @@ this will help us get aws set up to play nicely with zappa
 
 lets create the app file now
 
-```
+```bash
 touch app.py
 ```
 
@@ -48,7 +48,7 @@ open it up in your favorite text editor
 
 ## app.py
 
-```
+```python
 from flask import Flask
 
 app = Flask(__name__)
@@ -68,7 +68,7 @@ Now you have a tiny little app ready to go
 
 now run it in the terminal:
 
-```
+```bash
 export HELLO_WORLD = app.py
 flask run
 
@@ -81,7 +81,7 @@ If you haven't already you'll need to configure your awscli by following these [
 
 ## Deployment with Zappa
 
-```
+```bash
 zappa init
 ```
 
@@ -91,13 +91,13 @@ this is what makes zappa so nice, it takes this tiny config and then packages an
 
 you can check out more advanced settings to add into your project here: [advanced zappa settings](https://github.com/Miserlou/Zappa#advanced-settings)
 
-```
+```bash
 zappa deploy
 ```
 
 if you have any trouble with deploy on this one, such as seeing:
 
-```
+```json
 {
     message: 'internal server error'
 }
@@ -110,7 +110,7 @@ Unable to import module 'handler': No module named builtins
 there is most likely a difference between your local python version and pipenv's version
 so double check that and re-deploy, using different versions on pipenv is as as easy as:
 
-```
+```bash
 pipenv --two
 ```
 and re-installing your dependencies on the new venv
